@@ -2,37 +2,42 @@ package model;
 
 import classes.ColorCode;
 import classes.ModularCounter;
+import java.io.*;
 import java.util.Scanner;
 
 /*******************************
  * @author: Tobias Mitterwallner
- * @date: 26.01.2021
- * @version: 1.0
+ * @date: 02.02.2021
+ * @version: 2.0
  * @class: Model.java
  ******************************/
 
 public class Model {
+    //=============================================== Variables ======================================================//
+    private static ModularCounter red = new ModularCounter(256);
+    private static ModularCounter green = new ModularCounter(256);
+    private static ModularCounter blue = new ModularCounter(256);
+    private static Scanner sc = new Scanner(System.in); //Scanner
+    final String KEY = "Color File Format 1.0";
+    final String FILENAME = "color.dat";
 
-    private final static ModularCounter red = new ModularCounter(256);
-    private final static ModularCounter green = new ModularCounter(256);
-    private final static ModularCounter blue = new ModularCounter(256);
-    private final static Scanner sc = new Scanner(System.in); //Scanner
-
+    //============================================= color changing ===================================================//
     public static void changeColorViaAbsoluteValue(ColorCode cc, int value) {
         if (value >= 0 && value <= 255) {
             switch (cc) {
-                case RED -> {
+                case RED:
                     red.reset(); //resets the value to zero
                     red.inc(value); //red = 0 + value
-                }
-                case GREEN -> {
+                    break;
+
+                case GREEN:
                     green.reset();
                     green.inc(value);
-                }
-                case BLUE -> {
+                    break;
+
+                case BLUE:
                     blue.reset();
                     blue.inc(value);
-                }
             }
         }
     }
@@ -63,6 +68,7 @@ public class Model {
         }
     }
 
+    //============================================== getting values ==================================================//
     public static int getRed() {
         return red.getValue();
     }
@@ -102,14 +108,46 @@ public class Model {
         return hexValue;
     }
 
+    //======================================= load and save into files ===============================================//
+    public void loadFromFile() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILENAME))) {
+            if (reader.readLine().equals(KEY)) {
+                changeColorViaAbsoluteValue(ColorCode.RED, Integer.parseInt(reader.readLine()));
+                changeColorViaAbsoluteValue(ColorCode.GREEN, Integer.parseInt(reader.readLine()));
+                changeColorViaAbsoluteValue(ColorCode.BLUE, Integer.parseInt(reader.readLine()));
+            } else {
+                System.out.println("Error: wrong file!");
+            }
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
-    Model() {
+    public void saveToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILENAME))) {
+            //clears content
+            writer.flush();
+            writer.write("Color File Format 1.0");
+            writer.newLine();   //linebreak
+            writer.write("" + getRed());
+            writer.newLine();
+            writer.write("" + getGreen());
+            writer.newLine();
+            writer.write("" + getBlue());
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+
+    //============================================== other methods ===================================================//
+    public Model() {
 
     }
 
     public static void main(String[] args) {
         String selection;
-        boolean correctInput; // TODO: 22.01.2021  new
+        boolean correctInput;
 
         do {
             //prints out the menu
@@ -186,17 +224,15 @@ public class Model {
                 ']';
     }
 
+    //========================================= additional methods for psvm ==========================================//
     public static void printMenu() {
-        System.out.print("""
-
-
-                -------------------- Menu: ----------------------
-                \ta - changeColorViaAbsoluteValue\s
-                \tr - changeColorViaRelativeValue\s
-                \t? - view all accessors\s
-                \tq - quit
-                -------------------------------------------------
-                Enter a command:\s""");
+        System.out.print("\n\n-------------------- Menu: ----------------------\n" +
+                "\ta - changeColorViaAbsoluteValue \n" +
+                "\tr - changeColorViaRelativeValue \n" +
+                "\t? - view all accessors \n" +
+                "\tq - quit\n" +
+                "-------------------------------------------------\n" +
+                "Enter a command: ");
     }
 
     public static void printCurrentValues() {

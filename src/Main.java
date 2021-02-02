@@ -7,8 +7,8 @@ import javafx.stage.Stage;
 
 /*******************************
  * @author: Tobias Mitterwallner
- * @date: 26.01.2021
- * @version: 1.0
+ * @date: 02.02.2021
+ * @version: 2.0
  * @class: Main.java
  ******************************/
 

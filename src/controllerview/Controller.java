@@ -10,8 +10,8 @@ import model.Model;
 
 /*******************************
  * @author: Tobias Mitterwallner
- * @date: 26.01.2021
- * @version: 1.0
+ * @date: 02.02.2021
+ * @version: 2.0
  * @class: Controller.java
  ******************************/
 
@@ -22,8 +22,9 @@ public class Controller {
     @FXML TextField txtf_rgbValueRed = new TextField();
     @FXML TextField txtf_rgbValueGreen = new TextField();
     @FXML TextField txtf_rgbValueBlue = new TextField();
+    Model model = new Model();
 
-
+    //=============================================== handlers =======================================================//
     public void hdl_changeAbsolute(KeyEvent keyEvent) {
         String hexCode = Model.getHex();
 
@@ -62,17 +63,28 @@ public class Controller {
         //changes the respective color value
         if (btnID.contains("red")) {
             Model.changeColorViaRelativeValue(ColorCode.RED, op);
-            txtf_rgbValueRed.setText("" + Model.getRed());
+
         } else if (btnID.contains("green")) {
             Model.changeColorViaRelativeValue(ColorCode.GREEN, op);
-            txtf_rgbValueGreen.setText("" + Model.getGreen());
+
         } else {
             Model.changeColorViaRelativeValue(ColorCode.BLUE, op);
-            txtf_rgbValueBlue.setText("" + Model.getBlue());
         }
+        setTxtF();
 
         //changes color of the button
         changeColorView(Model.getHex());
+    }
+
+    //============================================= other methods ====================================================//
+    public void save() {
+        model.saveToFile();
+    }
+
+    public void load() {
+        model.loadFromFile();
+        changeColorView(Model.getHex());
+        setTxtF();
     }
 
     public void changeColorView(String hexCode) {
@@ -81,5 +93,11 @@ public class Controller {
 
         //updates hexcode in textfield
         txtf_hexValue.setText("#" + hexCode);
+    }
+
+    public void setTxtF(){
+        txtf_rgbValueRed.setText("" + Model.getRed());
+        txtf_rgbValueGreen.setText("" + Model.getGreen());
+        txtf_rgbValueBlue.setText("" + Model.getBlue());
     }
 }
