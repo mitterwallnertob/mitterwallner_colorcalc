@@ -1,7 +1,5 @@
 package model;
 
-import classes.ColorCode;
-import classes.ModularCounter;
 import java.io.*;
 import java.util.Scanner;
 

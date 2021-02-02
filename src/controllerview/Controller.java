@@ -1,6 +1,6 @@
 package controllerview;
 
-import classes.ColorCode;
+import model.ColorCode;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
